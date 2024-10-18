@@ -69,3 +69,9 @@ kramdown:
   hard_wrap         : false
   footnote_nr       : 1
   show_warnings     : false
+
+#Description
+disctiption:
+  theme: jekyll-theme-minimal
+  title: mlibersat's homepage
+  description: Bookmark this to keep an eye on my project updates!
