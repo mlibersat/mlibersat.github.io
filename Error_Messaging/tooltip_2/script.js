@@ -73,21 +73,11 @@ function ggbOnInit(name, ggbObject) {
       // takes a GGB object name as an argument, returns its keyboard text.
       const keyboardInstructions = {
         // A: "Press the arrow keys to move this point.",
-        ggbButton1: ggbObject.getValue("ggbButton1Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton2: ggbObject.getValue("ggbButton2Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton3: ggbObject.getValue("ggbButton3Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton4: ggbObject.getValue("ggbButton4Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton5: ggbObject.getValue("ggbButton5Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
+        ggbButton1: ggbObject.getValue("ggbButton1Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton2: ggbObject.getValue("ggbButton2Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton3: ggbObject.getValue("ggbButton3Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton4: ggbObject.getValue("ggbButton4Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton5: ggbObject.getValue("ggbButton5Enabled") ? "Press space to ___." : unavailableButtonText,
       };
       return keyboardInstructions[obj];
     }
@@ -127,11 +117,10 @@ function ggbOnInit(name, ggbObject) {
         function getScreenX(boxName) {
           const minX = ggbObject.getValue("x(Corner(1))");
           const maxX = ggbObject.getValue("x(Corner(3))");
-          const windowPixelX = ggbObject.getValue("x(Corner(5))");
+          const windowPixelX = container.offsetWidth;
+          // const windowPixelX = ggbObject.getValue("x(Corner(5))");
           const diffX = maxX - minX;
-          const inputBoxBLCornerX = ggbObject.getValue(
-            `x(Corner(${boxName},1))`
-          );
+          const inputBoxBLCornerX = ggbObject.getValue(`x(Corner(${boxName},1))`);
           const screenX = ((inputBoxBLCornerX - minX) / diffX) * windowPixelX;
           return screenX;
         }
@@ -139,14 +128,12 @@ function ggbOnInit(name, ggbObject) {
         function getScreenY(boxName) {
           const minY = ggbObject.getValue("y(Corner(1))");
           const maxY = ggbObject.getValue("y(Corner(3))");
-          const windowPixelY = ggbObject.getValue("y(Corner(5))");
+          const windowPixelY = container.offsetHeight;
+          // const windowPixelY = ggbObject.getValue("y(Corner(5))");
           const diffY = maxY - minY;
           const yNudge = 20;
-          const inputBoxBLCornerY = ggbObject.getValue(
-            `y(Corner(${boxName},1))`
-          );
-          const screenY =
-            ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
+          const inputBoxBLCornerY = ggbObject.getValue(`y(Corner(${boxName},1))`);
+          const screenY = ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
           return screenY;
         }
       }
@@ -154,7 +141,8 @@ function ggbOnInit(name, ggbObject) {
 
     // Create a tooltip div dynamically
     const tooltip = document.createElement("div");
-    document.body.appendChild(tooltip);
+    const container = document.getElementById("ggb-element");
+    container.appendChild(tooltip);
 
     // Apply styles to make it look like a speech bubble
     tooltip.style.position = "absolute";
@@ -166,6 +154,13 @@ function ggbOnInit(name, ggbObject) {
     tooltip.style.pointerEvents = "none";
     tooltip.style.visibility = "hidden";
     tooltip.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+    document.body.onresize = () => {
+      if (tooltip.style.visibility === "visible") {
+        displayFakeErrorMessage(selectedObject.name);
+      } else {
+        hideText();
+      }
+    };
 
     // Add CSS for the triangle using a pseudo-element via a <style> tag in JavaScript
     const style = document.createElement("style");
@@ -193,40 +188,47 @@ function ggbOnInit(name, ggbObject) {
       const tooltipWidth = tooltip.offsetWidth;
       const tooltipHeight = tooltip.offsetHeight;
 
-      const container = document.getElementById("ggb-element");
-      const containerRect = container.getBoundingClientRect();
-
       let posX = x;
       let posY = y;
-
-      if (x + tooltipWidth > containerRect.right) {
-        posX = containerRect.right - tooltipWidth;
+      const containerRect = container.getBoundingClientRect();
+      const { right, bottom, left, top } = containerRect;
+      if (x + tooltipWidth > right) {
+        posX = right - tooltipWidth;
       }
-      if (y + tooltipHeight > containerRect.bottom) {
-        posY = containerRect.bottom - tooltipHeight;
+      if (y + tooltipHeight > bottom) {
+        posY = bottom - tooltipHeight;
       }
-      if (x < containerRect.left) {
-        posX = containerRect.left;
+      if (x < left) {
+        posX = left;
       }
-      if (y < containerRect.top) {
-        posY = containerRect.top;
+      if (y < top) {
+        posY = top;
       }
+      console.table([
+        ["x", x],
+        ["y", y],
+        ["posX", posX],
+        ["posY", posY],
+        ["left", left],
+        ["right", right],
+        ["top", top],
+        ["bottom", bottom],
+      ]);
 
       tooltip.style.left = `${posX}px`;
       tooltip.style.top = `${posY}px`;
 
       // Calculate triangle offset relative to the tooltip's left edge
-      const triangleOffset = x - posX + 20;
+      const triangleOffset = x - posX + left + 10;
       tooltip.style.setProperty("--triangle-offset", `${triangleOffset}px`);
     }
 
     // Function to hide the tooltip
     function hideText() {
       tooltip.style.visibility = "hidden";
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, tooltip]);
     }
 
-    /////////////////////////
+    // ///////////////////////
 
     function clickListenerFunction(clickedName) {
       // clickedName is a string
@@ -246,12 +248,9 @@ function ggbOnInit(name, ggbObject) {
       return Function("" + JSString)();
     }
     if (!window.didUtils || !window.didUtils.setupGGB) {
-      return fetch(
-        "https://cdn.digital.greatminds.org/did-utils/latest/index.js",
-        {
-          cache: "no-cache",
-        }
-      )
+      return fetch("https://cdn.digital.greatminds.org/did-utils/latest/index.js", {
+        cache: "no-cache",
+      })
         .then(function (response) {
           return response.text();
         })
