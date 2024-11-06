@@ -52,9 +52,8 @@ function ggbOnInit(name, ggbObject) {
     });
 
     ////////// immediately invoked code
-    let triangleWidth = 10;
+
     const ggbXCorner5 = ggbObject.getValue("x(Corner(5))");
-    let widthZoomAdjusted = ggbXCorner5;
     const fakeErrorMessage =
       '<span style="color: red;">&#9888; Input Error. Enter a number between 100 and 200. Here is a really really really really really really really really really really really really long error message.</span>';
 
@@ -62,12 +61,14 @@ function ggbOnInit(name, ggbObject) {
     const tooltip = document.createElement("div");
     const container = document.getElementById("ggb-element");
     container.appendChild(tooltip);
+    let widthZoomAdjusted = container.offsetWidth;
     let windowPixelX = container.offsetWidth;
     styleTooltip();
+    let triangleWidth = getTriangleWidth();
+    let yNudge = triangleWidth * Math.sqrt(3);
 
     //resize the tooltip when zoomed
     document.body.onresize = () => {
-      console.warn("Resizing");
       if (tooltip.style.visibility === "visible") {
         displayFakeErrorMessage(selectedObject.name);
       } else {
@@ -88,14 +89,14 @@ function ggbOnInit(name, ggbObject) {
         border-color: transparent transparent black transparent;
       }
     `;
-    updateTriangleStyle();
 
     ////////// Custom Functions
 
     function displayFakeErrorMessage(boxName) {
       const { x, y } = getInputBoxPixelLocation(boxName);
+      styleTooltip();
       showText(fakeErrorMessage, x, y);
-      updateTriangleStyle();
+      triangleWidth = getTriangleWidth();
 
       function getInputBoxPixelLocation(boxName) {
         // Get the screen (pixel) coordinates of the GeoGebra object
@@ -113,7 +114,6 @@ function ggbOnInit(name, ggbObject) {
           const minX = ggbObject.getValue("x(Corner(1))");
           const maxX = ggbObject.getValue("x(Corner(3))");
           windowPixelX = container.offsetWidth;
-          // const windowPixelX = ggbObject.getValue("x(Corner(5))");
           const diffX = maxX - minX;
           const inputBoxBLCornerX = ggbObject.getValue(`x(Corner(${boxName},1))`);
           const screenX = ((inputBoxBLCornerX - minX) / diffX) * windowPixelX;
@@ -124,9 +124,8 @@ function ggbOnInit(name, ggbObject) {
           const minY = ggbObject.getValue("y(Corner(1))");
           const maxY = ggbObject.getValue("y(Corner(3))");
           const windowPixelY = container.offsetHeight;
-          // const windowPixelY = ggbObject.getValue("y(Corner(5))");
           const diffY = maxY - minY;
-          const yNudge = triangleWidth * Math.sqrt(3);
+          yNudge = triangleWidth * Math.sqrt(3);
           const inputBoxBLCornerY = ggbObject.getValue(`y(Corner(${boxName},1))`);
           const screenY = ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
           return screenY;
@@ -147,32 +146,21 @@ function ggbOnInit(name, ggbObject) {
       tooltip.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
 
       // Set a maximum width and enable word wrapping
-      const width = widthZoomAdjusted - 100;
-      tooltip.style.maxWidth = width.toString() + "px"; // Need to adjust for width of applet
-      console.warn("1. widthZoomAdjusted", widthZoomAdjusted);
-      console.warn("1. width.toString() + px", width.toString() + "px");
-      console.log("maxWidth:", tooltip.style.maxWidth);
+      widthZoomAdjusted = container.offsetWidth;
+      const maxTextWidth = widthZoomAdjusted - 100;
+      tooltip.style.maxWidth = maxTextWidth.toString() + "px";
       tooltip.style.overflowWrap = "break-word";
       tooltip.style.wordBreak = "break-word";
     }
 
-    function updateTriangleStyle() {
-      const containerRect = container.getBoundingClientRect();
-      const { right, bottom, left, top } = containerRect;
-      widthZoomAdjusted = right - left;
-      console.log("2. widthZoomAdjusted", widthZoomAdjusted);
-      triangleWidth = (widthZoomAdjusted * 10) / ggbXCorner5;
-      console.log(tooltip.style);
-      tooltip.style.setProperty("--border-width", `${triangleWidth}px`);
-      document.head.appendChild(style);
-
-      // Add the tooltip class to the tooltip element
-      tooltip.classList.add("tooltip");
+    // set a standard size for the triangle width, regardless of Zoom level
+    function getTriangleWidth() {
+      tempWidth = (container.offsetWidth * 10) / ggbXCorner5;
+      return tempWidth;
     }
 
     // Function to show text at specified coordinates and keep it within bounds
     function showText(text, x, y) {
-      styleTooltip();
       tooltip.innerHTML = text;
       tooltip.style.visibility = "visible";
 
@@ -183,41 +171,19 @@ function ggbOnInit(name, ggbObject) {
       let posY = y;
       const containerRect = container.getBoundingClientRect();
       const { right, bottom, left, top } = containerRect;
-      const widthZoomAdjusted = right - left;
-      triangleWidth = (widthZoomAdjusted * 10) / ggbXCorner5;
-      console.log(tooltip.style);
-      tooltip.style.setProperty("--border-width", `${triangleWidth}px`);
+      document.head.appendChild(style);
 
-      // console.table([
-      //   ["right", right],
-      //   ["left", left],
-      //   ["widthZoomAdjusted", widthZoomAdjusted],
-      //   ["ggbXCorner5", ggbXCorner5],
-      //   ["triangleWidth", triangleWidth],
-      // ]);
+      // Add the tooltip class to the tooltip element
+      tooltip.classList.add("tooltip");
+      tooltip.style.setProperty("--border-width", `${getTriangleWidth()}px`);
+
+      // prevent tooltip from going off the screen to the right
       if (x + tooltipWidth > right) {
         posX = right - tooltipWidth;
-      }
-      if (y + tooltipHeight > bottom) {
-        posY = bottom - tooltipHeight;
       }
       if (x < left) {
         posX = left;
       }
-      if (y < top) {
-        posY = top;
-      }
-      // console.table([
-      //   ["x", x],
-      //   ["y", y],
-      //   ["posX", posX],
-      //   ["posY", posY],
-      //   ["left", left],
-      //   ["right", right],
-      //   ["top", top],
-      //   ["bottom", bottom],
-      // ]);
-
       tooltip.style.left = `${posX}px`;
       tooltip.style.top = `${posY}px`;
 
