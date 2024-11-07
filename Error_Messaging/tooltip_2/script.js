@@ -57,7 +57,7 @@ function ggbOnInit(name, ggbObject) {
 
     const ggbXCorner5 = ggbObject.getValue("x(Corner(5))");
     const fakeErrorMessage =
-      '<span style="color: #A50D0D; ">&#9888; <span style="font-style: italic;">Enter a number between 100 and 200. Here is a really really really really really really really really really really really really long error message.</span></span>';
+      '<span style="color: #A50D0D; ">&#9888; Enter a number between 100 and 200. Here is a really really really really really really really really really really really really long error message.</span>';
 
     // Create a tooltip div dynamically
     const tooltip = document.createElement("div");
