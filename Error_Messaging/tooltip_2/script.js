@@ -52,10 +52,12 @@ function ggbOnInit(name, ggbObject) {
     });
 
     ////////// immediately invoked code
+    const defaultFontSize = 18;
+    const minFontSize = 14;
 
     const ggbXCorner5 = ggbObject.getValue("x(Corner(5))");
     const fakeErrorMessage =
-      '<span style="color: red;">&#9888; Input Error. Enter a number between 100 and 200. Here is a really really really really really really really really really really really really long error message.</span>';
+      '<span style="color: #A50D0D; ">&#9888; <span style="font-style: italic;">Enter a number between 100 and 200. Here is a really really really really really really really really really really really really long error message.</span></span>';
 
     // Create a tooltip div dynamically
     const tooltip = document.createElement("div");
@@ -65,7 +67,7 @@ function ggbOnInit(name, ggbObject) {
     let windowPixelX = container.offsetWidth;
     styleTooltip();
     let triangleWidth = getTriangleWidth();
-    let yNudge = triangleWidth * Math.sqrt(3);
+    let triangleHeight = triangleWidth * Math.sqrt(3);
 
     //resize the tooltip when zoomed
     document.body.onresize = () => {
@@ -125,9 +127,9 @@ function ggbOnInit(name, ggbObject) {
           const maxY = ggbObject.getValue("y(Corner(3))");
           const windowPixelY = container.offsetHeight;
           const diffY = maxY - minY;
-          yNudge = triangleWidth * Math.sqrt(3);
+          triangleHeight = getTriangleWidth() * Math.sqrt(3);
           const inputBoxBLCornerY = ggbObject.getValue(`y(Corner(${boxName},1))`);
-          const screenY = ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
+          const screenY = ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + triangleHeight;
           return screenY;
         }
       }
@@ -139,7 +141,7 @@ function ggbOnInit(name, ggbObject) {
       tooltip.style.backgroundColor = "rgb(255, 255, 255)";
       tooltip.style.border = "1px solid black";
       tooltip.style.padding = "10px";
-      tooltip.style.fontSize = "18px";
+      tooltip.style.fontSize = defaultFontSize.toString().concat("px");
       tooltip.style.borderRadius = "10px";
       tooltip.style.pointerEvents = "none";
       tooltip.style.visibility = "hidden";
@@ -169,6 +171,7 @@ function ggbOnInit(name, ggbObject) {
 
       let posX = x;
       let posY = y;
+      const yNudge = 2;
       const containerRect = container.getBoundingClientRect();
       const { right, bottom, left, top } = containerRect;
       document.head.appendChild(style);
@@ -185,7 +188,11 @@ function ggbOnInit(name, ggbObject) {
         posX = left;
       }
       tooltip.style.left = `${posX}px`;
-      tooltip.style.top = `${posY}px`;
+      tooltip.style.top = `${posY + yNudge}px`;
+
+      // if the tooltip goes off the bottom of the screen, reduce the font size (it will still be zoomed)
+      tooltip.style.fontSize =
+        y + tooltipHeight < bottom ? defaultFontSize.toString().concat("px") : minFontSize.toString().concat("px");
 
       // Calculate triangle offset relative to the tooltip's left edge
       const triangleOffset = x - posX + left;
