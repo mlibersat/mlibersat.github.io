@@ -59,10 +59,7 @@ function ggbOnInit(name, ggbObject) {
     let customX = ggbObject.getValue("customX");
     let customY = ggbObject.getValue("customY");
     let customWidth = ggbObject.getValue("customWidth");
-    registerSafeObjectUpdateListener(
-      "useCustomCoords",
-      tempFunctionCustomCoords
-    );
+    registerSafeObjectUpdateListener("useCustomCoords", tempFunctionCustomCoords);
     registerSafeObjectUpdateListener("customX", tempFunctionCustomCoords);
     registerSafeObjectUpdateListener("customY", tempFunctionCustomCoords);
     registerSafeObjectUpdateListener("customWidth", tempFunctionCustomWidth);
@@ -160,9 +157,7 @@ function ggbOnInit(name, ggbObject) {
           const maxX = ggbObject.getValue("x(Corner(3))");
           windowPixelX = container.offsetWidth;
           const diffX = maxX - minX;
-          const startingX = useCustomCoords
-            ? customX
-            : ggbObject.getValue(`x(Corner(${boxName},1))`);
+          const startingX = useCustomCoords ? customX : ggbObject.getValue(`x(Corner(${boxName},1))`);
           const screenX = ((startingX - minX) / diffX) * windowPixelX;
           return screenX;
         }
@@ -173,11 +168,8 @@ function ggbOnInit(name, ggbObject) {
           const windowPixelY = container.offsetHeight;
           const diffY = maxY - minY;
           triangleHeight = getTriangleWidth() * Math.sqrt(3);
-          const startingY = useCustomCoords
-            ? customY
-            : ggbObject.getValue(`y(Corner(${boxName},1))`);
-          const screenY =
-            ((maxY - startingY) / diffY) * windowPixelY + triangleHeight;
+          const startingY = useCustomCoords ? customY : ggbObject.getValue(`y(Corner(${boxName},1))`);
+          const screenY = ((maxY - startingY) / diffY) * windowPixelY + triangleHeight;
           return screenY;
         }
       }
@@ -237,13 +229,11 @@ function ggbOnInit(name, ggbObject) {
         posX = left;
       }
       tooltip.style.left = `${posX}px`;
-      tooltip.style.top = `${posY + yNudge}px`;
+      tooltip.style.top = `${top + posY + yNudge}px`;
 
       // if the tooltip goes off the bottom of the screen, reduce the font size (it will still be zoomed)
       tooltip.style.fontSize =
-        y + tooltipHeight < bottom
-          ? defaultFontSize.toString().concat("px")
-          : minFontSize.toString().concat("px");
+        y + tooltipHeight < bottom ? defaultFontSize.toString().concat("px") : minFontSize.toString().concat("px");
 
       // Calculate triangle offset relative to the tooltip's left edge
       const triangleOffset = x - posX + left;
@@ -286,21 +276,11 @@ function ggbOnInit(name, ggbObject) {
       // takes a GGB object name as an argument, returns its keyboard text.
       const keyboardInstructions = {
         // A: "Press the arrow keys to move this point.",
-        ggbButton1: ggbObject.getValue("ggbButton1Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton2: ggbObject.getValue("ggbButton2Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton3: ggbObject.getValue("ggbButton3Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton4: ggbObject.getValue("ggbButton4Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton5: ggbObject.getValue("ggbButton5Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
+        ggbButton1: ggbObject.getValue("ggbButton1Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton2: ggbObject.getValue("ggbButton2Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton3: ggbObject.getValue("ggbButton3Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton4: ggbObject.getValue("ggbButton4Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton5: ggbObject.getValue("ggbButton5Enabled") ? "Press space to ___." : unavailableButtonText,
       };
       return keyboardInstructions[obj];
     }
@@ -336,12 +316,9 @@ function ggbOnInit(name, ggbObject) {
       return Function("" + JSString)();
     }
     if (!window.didUtils || !window.didUtils.setupGGB) {
-      return fetch(
-        "https://cdn.digital.greatminds.org/did-utils/latest/index.js",
-        {
-          cache: "no-cache",
-        }
-      )
+      return fetch("https://cdn.digital.greatminds.org/did-utils/latest/index.js", {
+        cache: "no-cache",
+      })
         .then(function (response) {
           return response.text();
         })

@@ -73,21 +73,11 @@ function ggbOnInit(name, ggbObject) {
       // takes a GGB object name as an argument, returns its keyboard text.
       const keyboardInstructions = {
         // A: "Press the arrow keys to move this point.",
-        ggbButton1: ggbObject.getValue("ggbButton1Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton2: ggbObject.getValue("ggbButton2Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton3: ggbObject.getValue("ggbButton3Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton4: ggbObject.getValue("ggbButton4Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
-        ggbButton5: ggbObject.getValue("ggbButton5Enabled")
-          ? "Press space to ___."
-          : unavailableButtonText,
+        ggbButton1: ggbObject.getValue("ggbButton1Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton2: ggbObject.getValue("ggbButton2Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton3: ggbObject.getValue("ggbButton3Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton4: ggbObject.getValue("ggbButton4Enabled") ? "Press space to ___." : unavailableButtonText,
+        ggbButton5: ggbObject.getValue("ggbButton5Enabled") ? "Press space to ___." : unavailableButtonText,
       };
       return keyboardInstructions[obj];
     }
@@ -130,9 +120,7 @@ function ggbOnInit(name, ggbObject) {
           const maxX = ggbObject.getValue("x(Corner(3))");
           const windowPixelX = ggbObject.getValue("x(Corner(5))");
           const diffX = maxX - minX;
-          const inputBoxBLCornerX = ggbObject.getValue(
-            `x(Corner(${boxName},1))`
-          );
+          const inputBoxBLCornerX = ggbObject.getValue(`x(Corner(${boxName},1))`);
           const screenX = ((inputBoxBLCornerX - minX) / diffX) * windowPixelX;
           return screenX;
         }
@@ -142,11 +130,8 @@ function ggbOnInit(name, ggbObject) {
           const windowPixelY = ggbObject.getValue("y(Corner(5))");
           const diffY = maxY - minY;
           const yNudge = 20;
-          const inputBoxBLCornerY = ggbObject.getValue(
-            `y(Corner(${boxName},1))`
-          );
-          const screenY =
-            ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
+          const inputBoxBLCornerY = ggbObject.getValue(`y(Corner(${boxName},1))`);
+          const screenY = ((maxY - inputBoxBLCornerY) / diffY) * windowPixelY + yNudge;
           return screenY;
         }
       }
@@ -187,9 +172,12 @@ function ggbOnInit(name, ggbObject) {
 
     // Function to show text at specified coordinates
     function showText(text, x, y) {
+      const container = document.getElementById("ggb-element");
+      const containerRect = container.getBoundingClientRect();
+      const { top } = containerRect;
       tooltip.innerHTML = text; // Set the text
       tooltip.style.left = `${x}px`; // Set x position
-      tooltip.style.top = `${y}px`; // Set y position
+      tooltip.style.top = `${top + y}px`; // Set y position
       tooltip.style.visibility = "visible"; // Make tooltip visible
     }
 
@@ -309,12 +297,9 @@ function ggbOnInit(name, ggbObject) {
       return Function("" + JSString)();
     }
     if (!window.didUtils || !window.didUtils.setupGGB) {
-      return fetch(
-        "https://cdn.digital.greatminds.org/did-utils/latest/index.js",
-        {
-          cache: "no-cache",
-        }
-      )
+      return fetch("https://cdn.digital.greatminds.org/did-utils/latest/index.js", {
+        cache: "no-cache",
+      })
         .then(function (response) {
           return response.text();
         })

@@ -188,7 +188,7 @@ function ggbOnInit(name, ggbObject) {
         posX = left;
       }
       tooltip.style.left = `${posX}px`;
-      tooltip.style.top = `${posY + yNudge}px`;
+      tooltip.style.top = `${top + posY + yNudge}px`;
 
       // if the tooltip goes off the bottom of the screen, reduce the font size (it will still be zoomed)
       tooltip.style.fontSize =
