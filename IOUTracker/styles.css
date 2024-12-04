@@ -1,0 +1,247 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #e0f7fa;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0) 40%, rgba(0, 128, 128, 0.1) 40%),
+    radial-gradient(circle, rgba(255, 255, 255, 0) 40%, rgba(0, 128, 128, 0.2) 40%);
+  background-size: 60px 60px;
+  color: #066470;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  background-attachment: fixed; /* Keeps the background fixed during scroll */
+}
+textarea,
+input,
+select {
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #00acc1;
+  display: block;
+}
+
+textarea#peopleInput {
+  width: 150px;
+  height: 150px;
+}
+
+textarea,
+input[type="text"],
+select {
+  width: 100px;
+  display: inline-block;
+}
+
+button {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #00acc1;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #008c9e;
+}
+
+.hidden {
+  display: none;
+}
+
+section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+h1 {
+  color: #066470;
+  font-size: 2.5rem;
+  padding: 10px;
+  border-radius: 5px;
+  width: fit-content;
+  text-align: center;
+}
+
+h2 {
+  color: #066470;
+  font-size: 2rem;
+  padding: 10px;
+  border-radius: 5px;
+  display: block;
+  width: fit-content;
+  text-align: center;
+}
+
+.transaction-entry {
+  background-color: #b2dfdb;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+}
+
+.actions button {
+  background: none;
+  border: none;
+  color: #00796b;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.actions button:hover {
+  color: #004d40;
+}
+
+#iouSection {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#iouSection select,
+#iouSection input {
+  margin: 5px;
+  padding: 10px;
+}
+
+#iouSection button {
+  margin: 5px;
+}
+
+#transactionLog {
+  text-align: left;
+}
+#disclaimer {
+  text-align: center;
+  font-size: 80%;
+}
+
+#clearAllBtn {
+  background-color: #e57373; /* Red color to indicate deletion */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#clearAllBtn:hover {
+  background-color: #c62828;
+}
+
+#peopleSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.people-tile {
+  width: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.tile-summary {
+  font-weight: bold;
+}
+
+.transaction-details {
+  display: none;
+  margin-top: 10px;
+}
+
+.transaction-entry {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  padding: 5px;
+  margin-top: 10px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.person-summary-tile {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.tile-header {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.transaction-details {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.transaction-entry {
+  margin: 5px 0;
+}
+.expand-collapse-btn {
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.expand-collapse-btn::before {
+  content: "▶"; /* Collapsed state */
+  font-size: 14px;
+  margin-right: 8px; /* Space between icon and text */
+  margin-left: 8px; /* Add padding between titleHeader and symbol */
+
+  color: #333;
+  transition: transform 0.3s ease;
+}
+
+.expand-collapse-btn.expanded::before {
+  content: "▼"; /* Expanded state */
+  transform: rotate(0deg); /* No rotation needed for down triangle */
+}
+
+.expand-collapse-btn {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.person-name {
+  font-size: 16px;
+}
+
+.person-name strong {
+  font-weight: bold;
+}
+
+.owed-details {
+  font-size: 14px;
+  font-weight: normal;
+  padding-left: 10px;
+  margin-top: 5px;
+}
